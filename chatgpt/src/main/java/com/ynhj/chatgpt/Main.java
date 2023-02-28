@@ -21,23 +21,39 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        List<String> questions = new ArrayList<>();
+        List<Chat> chats = new ArrayList<>();
         while (scanner.hasNextLine()) {
+            Chat chat = new Chat();
             String question = scanner.nextLine();
-            questions.add(question);
-            String questionsString = arrayJoin(questions);
+            chat.question = question;
+            String questionsString = arrayJoin(chats, question);
             String answer = chatGptApi.chat(questionsString);
+
             LOGGER.info("chat gpt question:{}, answer:{}", question, answer);
-            questions.add(answer);
+            if (!answer.isEmpty()) {
+                chat.answer = answer;
+                chats.add(chat);
+            }
         }
     }
 
-    private static String arrayJoin(List<String> questions) {
-        String[] strings = new String[questions.size()];
-        strings = questions.toArray(strings);
-        return String.join("", strings).replace("\n", "");
-//        StringBuilder stringBuilder = new StringBuilder();
-//        questions.forEach(s -> stringBuilder.append(s).append("\n"));
-//        return stringBuilder.toString();
+    public static class Chat {
+        private String question;
+        private String answer;
+
+
+    }
+
+    private static String arrayJoin(List<Chat> chats, String question) {
+//        String[] strings = new String[questions.size()];
+//        strings = questions.toArray(strings);
+//        return String.join("", strings).replace("\n", "");
+        StringBuilder stringBuilder = new StringBuilder();
+        chats.forEach(s -> {
+            stringBuilder.append("Human:").append(s.question).append("\n");
+            stringBuilder.append("AI:").append(s.answer);
+        });
+        stringBuilder.append("Human:").append(question);
+        return stringBuilder.toString().replaceAll("\n", "");
     }
 }
