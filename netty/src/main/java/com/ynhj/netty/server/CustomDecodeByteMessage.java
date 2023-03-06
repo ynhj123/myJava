@@ -16,10 +16,11 @@ import java.util.List;
  * @description： update_version: update_date: update_author: update_note:
  */
 public class CustomDecodeByteMessage extends ByteToMessageDecoder {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(CustomDecodeByteMessage.class);
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
+        LOGGER.info(byteBuf.readableBytes());
         if (byteBuf.readableBytes() < 2) {
             return;
         }
@@ -27,7 +28,7 @@ public class CustomDecodeByteMessage extends ByteToMessageDecoder {
         //pos是一个完整报文的开始位置，报文整体会在ByteBuf中移动，类似内存管理，所以基于字节的判断报文长度等等，都是基于pos，
         // 否则可以在byteBuf.readBytes（）之后加，byteBuf.discardReadBytes();整理ByteBuf，使pos回到0开始位置
         int pos = byteBuf.readerIndex();
-        LOGGER.debug(pos);
+        LOGGER.info(pos);
         int msgLen = ((byteBuf.getByte(pos + 1)) << 8) | (byteBuf.getByte(pos));
 
         //收到的报文长度不足一个完整的报文，继续接收

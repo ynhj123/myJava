@@ -22,7 +22,7 @@ import java.net.InetSocketAddress;
  * @description： update_version: update_date: update_author: update_note:
  */
 public class NettyServer {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger(NettyServer.class);
     // 通过nio方式来接收连接和处理连接
     private EventLoopGroup bg = new NioEventLoopGroup();
     private EventLoopGroup wg = new NioEventLoopGroup();
